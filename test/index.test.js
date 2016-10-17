@@ -167,27 +167,15 @@ describe("Rate limiter", () => {
 
       const start = new Date();
 
-      let res1;
-      let res2;
+      const res1 = await limited(2);
 
-      let mid;
+      const res2 = await limited(3);
 
-      limited(2).then(res => {
-        res1 = res;
-      });
-
-      limited(3).then(res => {
-        res2 = res;
-        mid = new Date();
-      });
+      const mid = new Date();
 
       const res3 = await limited(4);
 
       const end = new Date();
-
-      console.log(start);
-      console.log(mid);
-      console.log(end);
 
       expect(res1).toEqual(4);
       expect(res2).toEqual(9);

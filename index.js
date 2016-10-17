@@ -35,7 +35,7 @@ module.exports = (fn) => {
 			}
 		}
 
-		if (queue.length <= 0) {
+		if (queue.length <= 0 && !evenly) {
 			timer = null;
 		}
 		else if (per > -1) {
@@ -49,15 +49,15 @@ module.exports = (fn) => {
 	};
 
 	const limiter = function () {
-
-
-    const args = Object.values(arguments);
-
 		const promise = new Promise((resolve, reject) => {
 
   		if (done) {
   			return reject(new Error('Limit reached.'));
   		}
+
+      let i = arguments.length;
+      const args = new Array(i);
+      while (i--) args[i] = arguments[i];
 
       queue.push({ promise : { resolve, reject }, args });
 

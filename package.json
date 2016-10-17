@@ -3,9 +3,12 @@
   "engines": {
     "node": ">=6"
   },
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A wrapper to limit functions in promises",
   "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
   "devDependencies": {
     "jest": "^16.0.1"
   },
@@ -14,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Americas/rate-limiter.git"
+    "url": "git+https://github.com/Americas/rate-limiter-promise.git"
   },
   "keywords": [
     "rate-limiter",
@@ -23,7 +26,7 @@
   "author": "Ricardo Lopes <prplopes@gmail.com>",
   "license": "Unlicense",
   "bugs": {
-    "url": "https://github.com/Americas/rate-limiter/issues"
+    "url": "https://github.com/Americas/rate-limiter-promise/issues"
   },
-  "homepage": "https://github.com/Americas/rate-limiter#readme"
+  "homepage": "https://github.com/Americas/rate-limiter-promise#readme"
 }
