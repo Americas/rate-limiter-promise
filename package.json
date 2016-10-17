@@ -1,0 +1,29 @@
+{
+  "name": "rate-limiter-promise",
+  "engines": {
+    "node": ">=6"
+  },
+  "version": "1.0.0",
+  "description": "A wrapper to limit functions in promises",
+  "main": "index.js",
+  "devDependencies": {
+    "jest": "^16.0.1"
+  },
+  "scripts": {
+    "test": "node --harmony node_modules/jest/bin/jest.js --env=node --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Americas/rate-limiter.git"
+  },
+  "keywords": [
+    "rate-limiter",
+    "promises"
+  ],
+  "author": "Ricardo Lopes <prplopes@gmail.com>",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/Americas/rate-limiter/issues"
+  },
+  "homepage": "https://github.com/Americas/rate-limiter#readme"
+}
