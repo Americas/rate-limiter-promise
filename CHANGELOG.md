@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Upcoming]
+- Added travis configuration
 
 ## [v0.0.2](https://github.com/americas/rate-limiter-promise/tree/v0.0.2) (2016-10-17)
 [Full Changelog](https://github.com/americas/rate-limiter-promise/compare/v0.0.1...v0.0.2)
