@@ -1,89 +1,105 @@
-module.exports = (fn) => {
-  const queue = [];
+/**
+ * Rate limiter wrapping function.
+ * 
+ * @param {Function} fn - The function to wrap in the rate limiter.
+ */
 
+module.exports = (fn) => {
 	let done = false;
 	let evenly = false;
 	let per = -1;
   let rollWindow = [];
-	let timer = false;
-	let to = 1;
+  let to = 1;
 
-	const drain = () => {
-		const now = Date.now();
+  function getDelay() {
+    let runAt = Date.now();
 
-		rollWindow = rollWindow.filter(time => per < 0 ? true : (now - time < per));
+    if (per >= 0) {
+      let cull = true;
 
-		while(rollWindow.length < to && queue.length) {
-			rollWindow.push(now);
-
-			const run = queue.shift();
-
-			try {
-				const result = fn.apply(null, run.args);
-
-
-        Promise.resolve(result).then(
-          res => { run.promise.resolve(res); },
-          error => { run.promise.reject(error); }
-        );
-
-				if (evenly) {
-					break;
-				}
-			} catch (e) {
-				run.promise.reject(e);
-			}
-		}
-
-		if (queue.length <= 0 && !evenly) {
-			timer = null;
-		}
-		else if (per > -1) {
-			var delay = evenly ? (per / to) : (per - (now - rollWindow[0]));
-			timer = setTimeout(drain, delay);
-		}
-		else {
-			done = true;
-      queue.forEach(run => run.promise.reject(new Error('Limit reached.')));
-		}
-	};
-
-	const limiter = function () {
-		const promise = new Promise((resolve, reject) => {
-
-  		if (done) {
-  			return reject(new Error('Limit reached.'));
-  		}
-
-      let i = arguments.length;
-      const args = new Array(i);
-      while (i--) args[i] = arguments[i];
-
-      queue.push({ promise : { resolve, reject }, args });
-
-      if (!timer) {
-        timer = setImmediate(drain);
+      // Clean up calls that have left the rolling window.
+      do {
+        if (runAt - rollWindow[0] > per) {
+          rollWindow.shift();
+        } else {
+          cull = false;
+        }
+      } while(cull);
+    
+      if (evenly) {
+        runAt = Math.max(runAt, (rollWindow[rollWindow.length - 1] || 0) + (per / to));
       }
-    });
+    } else if (rollWindow.length >= to) {
+      done = true;
+      
+      throw new Error('Limit reached.');
+    }
 
-		return promise;
+    if (rollWindow.length >= to) {
+      runAt = Math.max(runAt, rollWindow[rollWindow.length - to] + per);
+    }
+    
+    rollWindow.push(runAt);
+
+    return Math.max(0, runAt - Date.now());
+  }
+
+  /**
+   * Wrapped function that checks the rate limits. 
+   *  
+   * @param  {...any} args - The arguments to pass to the wrapped function.
+   */
+
+	const limiter = async function (...args) {
+    if (done) {
+      throw new Error('Limit reached.');
+    }
+
+    const delay = getDelay();
+
+    if (delay) {
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+
+    return await fn.apply(null, args);
 	};
+
+  /**
+   * Set the maximum number of calls the function can be called.
+   * 
+   * @param {number} count 
+   */
 
 	limiter.to = (count) => {
-		if (count > 0 ) {
-			to = +count;
-		}
+		if (count <= 0) {
+      throw new Error('Invalid value provided to option `to`. Expected a value greater than 0.')
+    }
+    
+    to = +count;
 
 		return limiter;
 	};
 
+  /**
+   * Set the time window to count function calls towards the maximum number of calls.
+   * 
+   * @param {number} time 
+   */
 	limiter.per = (time) => {
-		if (time > -1) {
-			per = +time;
-		}
+		if (time <= 0) {
+      throw new Error('Invalid value provided to option `per`. Expected a value greater than 0.')
+    }
+
+    per = +time;
 
 		return limiter;
-	};
+  };
+  
+  /**
+   * Set the limiter to evenly distribute the calls in the time window.
+   * 
+   * @param {boolean} value 
+   */
 
 	limiter.evenly = (value) => {
 		evenly = !!value;

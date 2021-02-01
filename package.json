@@ -1,14 +1,11 @@
 {
   "name": "rate-limiter-promise",
   "engines": {
-    "node": ">=6"
+    "node": ">=10"
   },
   "version": "0.0.2",
   "description": "A wrapper to limit functions in promises",
   "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
   "devDependencies": {
     "eslint": "^7.18.0",
     "jest": "^26.6.3"
