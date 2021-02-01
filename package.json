@@ -10,9 +10,11 @@
     "test": "test"
   },
   "devDependencies": {
+    "eslint": "^7.18.0",
     "jest": "^26.6.3"
   },
   "scripts": {
+    "lint": "eslint index.js test",
     "test": "jest --coverage"
   },
   "repository": {
