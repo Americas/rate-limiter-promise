@@ -12,36 +12,23 @@ module.exports = (fn) => {
   let to = 1;
 
   function getDelay() {
-    let runAt = Date.now();
+    let delay;
 
     if (per >= 0) {
-      let cull = true;
-
-      // Clean up calls that have left the rolling window.
-      do {
-        if (runAt - rollWindow[0] > per) {
-          rollWindow.shift();
-        } else {
-          cull = false;
-        }
-      } while(cull);
-    
       if (evenly) {
-        runAt = Math.max(runAt, (rollWindow[rollWindow.length - 1] || 0) + (per / to));
+        delay = rollWindow[rollWindow.length - 1] + (per / to);
+      } else if (rollWindow.length >= to) {
+        delay = rollWindow[rollWindow.length - to] + per;
       }
     } else if (rollWindow.length >= to) {
       done = true;
-      
+
       throw new Error('Limit reached.');
     }
-
-    if (rollWindow.length >= to) {
-      runAt = Math.max(runAt, rollWindow[rollWindow.length - to] + per);
-    }
     
-    rollWindow.push(runAt);
+    rollWindow.push(delay || Date.now());
 
-    return Math.max(0, runAt - Date.now());
+    return delay ? delay - Date.now() : 0;
   }
 
   /**
@@ -88,6 +75,18 @@ module.exports = (fn) => {
 	limiter.per = (time) => {
 		if (time <= 0) {
       throw new Error('Invalid value provided to option `per`. Expected a value greater than 0.')
+    }
+
+    // Clean up calls that have left the rolling window if `per` is being defined for the first time.
+    if (per === -1) {
+      setInterval(() => {
+        const now = Date.now();
+        
+        // eslint-disable-next-line no-constant-condition
+        while (now - rollWindow[0] > per) {
+          rollWindow.shift();
+        }
+      }, 5000);
     }
 
     per = +time;

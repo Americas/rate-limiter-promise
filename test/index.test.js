@@ -187,25 +187,29 @@ describe("Rate limiter", () => {
       const mult = a => a*a;
       const limited = limiter(mult).to(10).per(1000).evenly(true);
 
-      const start = new Date();
+      const start = Date.now();
 
       const res1 = await limited(2);
-
       const res2 = await limited(3);
 
-      const mid = new Date();
+      const mid = Date.now();
 
       const res3 = await limited(4);
 
-      const end = new Date();
+      const end = Date.now();
 
       expect(res1).toEqual(4);
       expect(res2).toEqual(9);
       expect(res3).toEqual(16);
-      expect(mid - start).toBeGreaterThanOrEqual(100);
-      expect(end - mid).toBeGreaterThanOrEqual(95);
-      expect(end - mid).toBeLessThanOrEqual(105);
-      expect(end - start).toBeGreaterThanOrEqual(200);
+
+      expect(mid - start).toBeGreaterThanOrEqual(97);
+      expect(mid - start).toBeLessThanOrEqual(103);
+
+      expect(end - mid).toBeGreaterThanOrEqual(97);
+      expect(end - mid).toBeLessThanOrEqual(103);
+
+      expect(end - start).toBeGreaterThanOrEqual(197);
+      expect(end - start).toBeLessThanOrEqual(203);
     });
   });
 });
