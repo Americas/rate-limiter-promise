@@ -1,6 +1,29 @@
 const limiter = require("../");
 
 describe("Rate limiter", () => {
+  const nativeSetInterval = global.setInterval;
+  const timers = [];
+  
+  beforeAll(() => {
+    global.setInterval = (...args) => {
+      const timer = nativeSetInterval(...args);
+
+      timers.push(timer);
+
+      return timer;
+    }
+  });
+
+  afterAll(() => {
+    global.setInterval = nativeSetInterval;
+  });
+
+  afterEach(() => {
+    while(timers.length) {
+      clearInterval(timers.shift());
+    }
+  });
+
   describe("default", () => {
     it("should limit a function to one call", async () => {
       const mult = a => a*a;
