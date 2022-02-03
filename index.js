@@ -5,9 +5,9 @@
  */
 
 module.exports = (fn) => {
-	let done = false;
-	let evenly = false;
-	let per = -1;
+  let done = false;
+  let evenly = false;
+  let per = -1;
   let rollWindow = [];
   let to = 1;
 
@@ -37,7 +37,7 @@ module.exports = (fn) => {
    * @param  {...any} args - The arguments to pass to the wrapped function.
    */
 
-	const limiter = async function (...args) {
+  const limiter = async function (...args) {
     if (done) {
       throw new Error('Limit reached.');
     }
@@ -49,7 +49,7 @@ module.exports = (fn) => {
     }
 
     return await fn.apply(null, args);
-	};
+  };
 
   /**
    * Set the maximum number of calls the function can be called.
@@ -57,23 +57,23 @@ module.exports = (fn) => {
    * @param {number} count 
    */
 
-	limiter.to = (count) => {
-		if (count <= 0) {
+  limiter.to = (count) => {
+    if (count <= 0) {
       throw new Error('Invalid value provided to option `to`. Expected a value greater than 0.')
     }
     
     to = +count;
 
-		return limiter;
-	};
+    return limiter;
+  };
 
   /**
    * Set the time window to count function calls towards the maximum number of calls.
    * 
    * @param {number} time 
    */
-	limiter.per = (time) => {
-		if (time <= 0) {
+  limiter.per = (time) => {
+    if (time <= 0) {
       throw new Error('Invalid value provided to option `per`. Expected a value greater than 0.')
     }
 
@@ -91,7 +91,7 @@ module.exports = (fn) => {
 
     per = +time;
 
-		return limiter;
+    return limiter;
   };
   
   /**
@@ -100,11 +100,11 @@ module.exports = (fn) => {
    * @param {boolean} value 
    */
 
-	limiter.evenly = (value) => {
-		evenly = !!value;
+  limiter.evenly = (value) => {
+    evenly = !!value;
 
-		return limiter;
-	};
+    return limiter;
+  };
 
-	return limiter;
+  return limiter;
 };
