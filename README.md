@@ -2,6 +2,8 @@
 
 A simple library to wrap methods with rate limiting.
 
+[![npm version](https://badge.fury.io/js/rate-limiter-promise.svg)](https://badge.fury.io/js/rate-limiter-promise) [![Test](https://github.com/Americas/rate-limiter-promise/actions/workflows/test.yaml/badge.svg?branch=master)](https://github.com/Americas/rate-limiter-promise/actions/workflows/test.yaml)
+
 ## Instalation
 
 To install simply run:
