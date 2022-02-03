@@ -1,5 +1,16 @@
 # Changelog
 
+## [v1.1.0](https://github.com/americas/rate-limiter-promise/tree/v1.1.0) (2022-02-03)
+[Full Changelog](https://github.com/americas/rate-limiter-promise/compare/v1.0.1...v1.1.0)
+
+- Add npmignore
+- Add badges
+- Change CI to GHActions
+- Add minimal README
+- Wrap `setInterval` method so timers can be cleared after tests
+- Bump dependencies
+- Improve rolling window management
+
 ## [v1.0.1](https://github.com/americas/rate-limiter-promise/tree/v1.0.1) (2020-02-02)
 [Full Changelog](https://github.com/americas/rate-limiter-promise/compare/v1.0.0...v1.0.1)
 

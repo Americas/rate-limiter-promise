@@ -3,7 +3,7 @@
   "engines": {
     "node": ">=10"
   },
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A wrapper to limit functions in promises",
   "main": "index.js",
   "files": [
